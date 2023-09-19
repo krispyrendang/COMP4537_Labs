@@ -1,0 +1,9 @@
+.panel-white {
+    width: 100%;
+    height: 30px;
+  }
+
+  #timestamp {
+    width: 80%;
+    text-align: right;
+  }
