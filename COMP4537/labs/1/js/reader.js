@@ -15,7 +15,7 @@ setInterval(function () {
 	}
 }, 2000);
 
-function retrieveNotes(){
+function retrieveNotes(){''
     let arr = localStorage.getItem("notes");
 	let str = "";
 	let flag = 0;
