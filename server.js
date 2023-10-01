@@ -9,10 +9,9 @@ http.createServer((req, res) => {
 
     let q = url.parse(req.url, true);
     if(q.pathname == "/") {
-        res.end("This is the root.");
+        res.end();
     }
-    else 
-    if(q.pathname == "/COMP4537/labs/3/getDate/") {
+    else if(q.pathname == "/COMP4537/labs/3/getDate/") {
         let text = utils.getDate(q.query["name"]);
         res.end(`<div style=color:blue>` + text + `<div>`);
     }
