@@ -2,6 +2,8 @@ const http = require('http');
 const url = require('url');
 const PORT = process.env.PORT || 8080;
 
+app.use(express.static(__dirname));
+
 const utils = require('./COMP4537/labs/3/modules/utils');
 
 http.createServer((req, res) => {
@@ -9,7 +11,7 @@ http.createServer((req, res) => {
 
     let q = url.parse(req.url, true);
     if(q.pathname == "/") {
-        res.sendFile("index.html", { root: __dirname });
+        res.end("index.html", { root: __dirname });
     }
     else if(q.pathname == "/COMP4537/labs/3/getDate/") {
         let text = utils.getDate(q.query["name"]);
