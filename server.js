@@ -9,7 +9,7 @@ http.createServer((req, res) => {
 
     let q = url.parse(req.url, true);
     if(q.pathname == "/") {
-        res.end();
+        res.sendFile("index.html", { root: __dirname });
     }
     else if(q.pathname == "/COMP4537/labs/3/getDate/") {
         let text = utils.getDate(q.query["name"]);
