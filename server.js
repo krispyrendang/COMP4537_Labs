@@ -2,7 +2,7 @@ const http = require('http');
 const url = require('url');
 const PORT = process.env.PORT || 8080;
 
-app.use(express.static(__dirname));
+// app.use(express.static(__dirname));
 
 const utils = require('./COMP4537/labs/3/modules/utils');
 
