@@ -7,7 +7,11 @@ const PORT = process.env.PORT || 8080;
 const utils = require('./COMP4537/labs/3/modules/utils');
 
 http.createServer((req, res) => {
-    res.writeHead(200, {'Content-Type' : 'text/html'});
+    res.writeHead(200, {
+        "Content-Type": "text/html",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "*",
+    });
 
     let q = url.parse(req.url, true);
     if(q.pathname == "/") {
