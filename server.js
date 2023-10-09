@@ -16,7 +16,8 @@ http
 
 		let q = url.parse(req.url, true);
 		if (q.pathname == "/") {
-			res.end("this is the root.");
+			res.sendFile("index.html");
+			// res.end("this is the root.");
 		}
 		// else if (q.pathname == "/COMP4537/labs/1/index.html") {
 		// }
