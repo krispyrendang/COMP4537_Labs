@@ -2,12 +2,45 @@ const http = require("http");
 const url = require("url");
 const GET = "GET";
 const POST = "POST";
-const PORT = 8888;
 
 const endPointRoot = "/API/v1/";
 
 let requestCount = 0;
-let storage = [];
+let dictionary = [
+	// { word: "word", definition: "DEFINTION" },
+];
+
+function addDefinition(word, definition) {
+
+	//TODO!! check for empty string after removing spaces
+	if(!word.trim()){
+		console.log("word after trim: " word.trim());
+		return false;
+	}
+	for (let i = 0; i < dictionary.length; i++) {
+		if (dictionary[i].word === word) {
+			// Word exists, send message that word is not added
+			return false;
+		}
+	}
+
+	dictionary.push({
+		word: word,
+		definition: definition,
+	});
+	return true;
+}
+
+function searchDefinition(word) {
+	for (let i = 0; i < dictionary.length; i++) {
+		if (dictionary[i].word === word) {
+			// Word exists, send back the definition
+			return dictionary[i].definition;
+		}
+	}
+	//returns false if the word is not found in dictionary
+	return false;
+}
 
 http
 	.createServer(function (req, res) {
@@ -18,13 +51,37 @@ http
 		});
 
 		if (req.method === GET) {
+			console.log("GET");
+			console.log("Words in Dictionary:");
+			for (let i = 0; i < dictionary.length; i++) {
+				console.log(
+					"Word: " +
+						dictionary[i].word +
+						" Definition: " +
+						dictionary[i].definition
+				);
+			}
+
 			requestCount++;
 			const q = url.parse(req.url, true);
-			console.log(q.query["word"]);
-			res.end("Got the get request");
+
+			// Search for word in dictionary. Sends an appropriate response
+			results = searchDefinition(q.query["word"]);
+			if (results) {
+				res.end(results);
+			} else {
+				res.end(
+					"Request #" +
+						requestCount +
+						" The word '" +
+						q.query["word"] +
+						"' is not found!"
+				);
+			}
 		}
 
 		if (req.method === POST && req.url === endPointRoot) {
+			console.log("POST");
 			let body = "";
 
 			req.on("data", function (chunk) {
@@ -36,21 +93,29 @@ http
 			req.on("end", function () {
 				let q = url.parse(body, true);
 
-				console.log("word: " + q.query.word);
-				console.log("definition: " + q.query.definition);
-
-				storage.push(q.query);
-
-				for (let i = 0; i < storage.length; i++) {
-					const i++) = storage[i];
-i++)
+				// Adds word to dictionary if it does not exist. Sends an appropriate status message
+				let result = addDefinition(q.query.word, q.query.definition);
+				if (result) {
+					res.end(
+						"Request # " +
+							requestCount +
+							": (Total entries in your dictionary: " +
+							dictionary.length +
+							")\n\nNew entry recorded:" +
+							'\n\n"' +
+							q.query.word +
+							": " +
+							q.query.definition +
+							'"'
+					);
+				} else {
+					res.end(
+						"Unsuccessful: The new word already exists in the dictionary!"
+					);
 				}
-				console.logstorageInside Storage i++): " + storage.toString);
-
-				res.end("Got the post request");
 			});
 		}
 	})
-	.listen(PORT);
+	.listen(8888);
 
-console.log("Running on port: " + PORT);
+console.log("Running on port 8888");
