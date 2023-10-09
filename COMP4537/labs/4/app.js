@@ -11,12 +11,7 @@ let dictionary = [
 ];
 
 function addDefinition(word, definition) {
-
-	//TODO!! check for empty string after removing spaces
-	if(!word.trim()){
-		console.log("word after trim: " word.trim());
-		return false;
-	}
+	requestCount++;
 	for (let i = 0; i < dictionary.length; i++) {
 		if (dictionary[i].word === word) {
 			// Word exists, send message that word is not added
@@ -32,6 +27,7 @@ function addDefinition(word, definition) {
 }
 
 function searchDefinition(word) {
+	requestCount++;
 	for (let i = 0; i < dictionary.length; i++) {
 		if (dictionary[i].word === word) {
 			// Word exists, send back the definition
@@ -40,6 +36,17 @@ function searchDefinition(word) {
 	}
 	//returns false if the word is not found in dictionary
 	return false;
+}
+
+function inputCheck(word) {
+	let hasNumber = /\d/;
+	if (!word.trim() || hasNumber.test(word)) {
+		console.log("word after trim: " + word.trim());
+		requestCount++;
+		return true;
+	} else {
+		return false;
+	}
 }
 
 http
@@ -62,18 +69,17 @@ http
 				);
 			}
 
-			requestCount++;
 			const q = url.parse(req.url, true);
 
 			// Search for word in dictionary. Sends an appropriate response
-			results = searchDefinition(q.query["word"]);
-			if (results) {
-				res.end(results);
+			let result = searchDefinition(q.query["word"]);
+			if (result) {
+				res.end("Request #" + requestCount + "<br><br>" + result);
 			} else {
 				res.end(
 					"Request #" +
 						requestCount +
-						" The word '" +
+						"<br><br>The word '" +
 						q.query["word"] +
 						"' is not found!"
 				);
@@ -93,16 +99,27 @@ http
 			req.on("end", function () {
 				let q = url.parse(body, true);
 
+				//TODO!! check for empty string after removing spaces and if the word contains any digits
+				let hasWrongInput = inputCheck(q.query.word);
+				if (hasWrongInput) {
+					res.end(
+						"Request #" +
+							requestCount +
+							"<br><br>Unsuccessful: The entered word is either blank, empty or has numbers in it!"
+					);
+					return;
+				}
+
 				// Adds word to dictionary if it does not exist. Sends an appropriate status message
 				let result = addDefinition(q.query.word, q.query.definition);
 				if (result) {
 					res.end(
-						"Request # " +
+						"Request #" +
 							requestCount +
 							": (Total entries in your dictionary: " +
 							dictionary.length +
-							")\n\nNew entry recorded:" +
-							'\n\n"' +
+							")<br><br>New entry recorded:" +
+							'<br><br>"' +
 							q.query.word +
 							": " +
 							q.query.definition +
@@ -110,7 +127,9 @@ http
 					);
 				} else {
 					res.end(
-						"Unsuccessful: The new word already exists in the dictionary!"
+						"Request #" +
+							requestCount +
+							"<br><br>Unsuccessful: The new word already exists in the dictionary!"
 					);
 				}
 			});
