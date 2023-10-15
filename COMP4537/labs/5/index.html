@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Lab 5</h1>
+    <div>
+        <button onclick="addRows()">Add these rows to Database</button>
+        <br> <br>
+        <table style="border: 1px black solid;">
+            <tr>
+                <th>name</th>
+                <th>date_of_birth</th>
+            </tr>
+            <tr>
+                <td>Sara Brown</td>
+                <td>1901-01-01</td>
+            </tr>
+            <tr>
+                <td>John Smith</td>
+                <td>1941-01-01</td>
+            </tr>
+            <tr>
+                <td>Jack Ma</td>
+                <td>1961-01-30</td>
+            </tr>
+            <tr>
+                <td>Elon Musk</td>
+                <td>1999-01-01</td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="addResult"></div>
+
+    <div>
+        <h3>Create your own Insert/Select!</h3>
+        <textarea id="sqlQuery"></textarea>
+        <button onclick="sendQuery()">Run Query</button>
+    </div>
+
+    <div id="queryResult"></div>
+    <script>
+        // const endPointRoot = "https://www.winstonnguyen.ca/COMP4537/labs/5/API/v1/sql/";
+        const endPointRoot = "http://localhost:3000/COMP4537/labs/5/API/v1/sql/";
+
+        function addRows() {
+            const endPointAdd = endPointRoot + "addRows/";
+            const xhttp = new XMLHttpRequest();
+            xhttp.open("POST", endPointRoot, true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                    document.getElementById("addResult").innerHTML = this.responseText;
+                }
+            }
+        }
+
+        function sendQuery() {
+            let query = document.getElementById("sqlQuery").value;
+            let params = "?query=" + query;
+            
+            let queryFirst = query.split(" ")[0];
+            if(queryFirst.toLowerCase() === "insert") {
+                xhttp.open("POST", endPointRoot, true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send(params);
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log(this.responseText);
+                        document.getElementById("queryResult").innerHTML = this.responseText;
+                    }
+                }
+            } 
+            else if(queryFirst.toLowerCase() === "select") 
+            {
+                let url = endPointRoot + params;
+                const xhttp = new XMLHttpRequest();
+                xhttp.open("GET", url, true);
+                xhttp.send();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("searchResult").innerHTML = this.responseText;
+                    }
+                }
+            } 
+            else 
+            {
+                res.end("Please enter a query using SELECT or INSERT");
+            }
+        }
+    </script>
+</body>
+</html>
