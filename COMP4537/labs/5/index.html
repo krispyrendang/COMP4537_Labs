@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Lab5</title>
 </head>
 <body>
     <h1>Lab 5</h1>
@@ -13,7 +13,7 @@
         <table style="border: 1px black solid;">
             <tr>
                 <th>name</th>
-                <th>date_of_birth</th>
+                <th>dateOfBirth</th>
             </tr>
             <tr>
                 <td>Sara Brown</td>
@@ -50,8 +50,11 @@
         function addRows() {
             const endPointAdd = endPointRoot + "addRows/";
             const xhttp = new XMLHttpRequest();
-            xhttp.open("POST", endPointRoot, true);
+
+            xhttp.open("POST", endPointAdd, true);
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send();
+
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     console.log(this.responseText);
@@ -63,6 +66,9 @@
         function sendQuery() {
             let query = document.getElementById("sqlQuery").value;
             let params = "?query=" + query;
+            const xhttp = new XMLHttpRequest();
+            // console.log("query:" + query);
+            // console.log("params: " + params);
             
             let queryFirst = query.split(" ")[0];
             if(queryFirst.toLowerCase() === "insert") {
@@ -71,7 +77,6 @@
                 xhttp.send(params);
                 xhttp.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
-                        console.log(this.responseText);
                         document.getElementById("queryResult").innerHTML = this.responseText;
                     }
                 }
@@ -79,18 +84,27 @@
             else if(queryFirst.toLowerCase() === "select") 
             {
                 let url = endPointRoot + params;
-                const xhttp = new XMLHttpRequest();
                 xhttp.open("GET", url, true);
                 xhttp.send();
                 xhttp.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
-                        document.getElementById("searchResult").innerHTML = this.responseText;
-                    }
+
+                        document.getElementById("queryResult").innerHTML = "";
+
+                        let data = JSON.parse(this.responseText);
+                        let result = data[0];
+
+                        for (let i = 0; i < result.length; i++) {
+                            let row = document.createElement("div");
+                            row.innerHTML = JSON.stringify(result[i]);
+                            document.getElementById("queryResult").appendChild(row);
+                        }
+                    } 
                 }
             } 
             else 
             {
-                res.end("Please enter a query using SELECT or INSERT");
+                document.getElementById("queryResult").innerHTML = "Please enter a query using SELECT or INSERT";
             }
         }
     </script>
