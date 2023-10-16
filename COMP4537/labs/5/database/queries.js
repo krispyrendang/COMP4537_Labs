@@ -2,7 +2,7 @@ const database = require("./databaseConnection");
 
 async function addPatients() {
 	let createUserSQL = `
-        INSERT INTO comp4537.patient (
+        INSERT INTO patient (
             name,
             dateOfBirth
         )

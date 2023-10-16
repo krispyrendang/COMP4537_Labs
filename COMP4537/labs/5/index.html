@@ -92,13 +92,23 @@
                         document.getElementById("queryResult").innerHTML = "";
 
                         let data = JSON.parse(this.responseText);
-                        let result = data[0];
+
+                        console.log(data);
+
+                        if (data.result == false){
+                            console.log(JSON.stringify(data.msg));
+                            document.getElementById("queryResult").innerHTML = JSON.stringify(data.msg.message);
+                        } else {
+                            let result = data[0];
 
                         for (let i = 0; i < result.length; i++) {
                             let row = document.createElement("div");
                             row.innerHTML = JSON.stringify(result[i]);
                             document.getElementById("queryResult").appendChild(row);
                         }
+                        }
+
+                        
                     } 
                 }
             } 
