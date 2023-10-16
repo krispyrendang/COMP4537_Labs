@@ -45,7 +45,7 @@
     <div id="queryResult"></div>
     <script>
         // const endPointRoot = "https://www.winstonnguyen.ca/COMP4537/labs/5/API/v1/sql/";
-        const endPointRoot = "http://localhost:3000/COMP4537/labs/5/API/v1/sql/";
+        const endPointRoot = "http://localhost:8080/COMP4537/labs/5/API/v1/sql/";
 
         function addRows() {
             const endPointAdd = endPointRoot + "addRows/";
@@ -92,11 +92,17 @@
                         document.getElementById("queryResult").innerHTML = "";
 
                         let data = JSON.parse(this.responseText);
-                        let result = data[0];
-
-                        for (let i = 0; i < result.length; i++) {
+                        
+                        if(data.success) {
+                            let result = data.result[0];
+                            for (let i = 0; i < result.length; i++) {
+                                let row = document.createElement("div");
+                                row.innerHTML = JSON.stringify(result[i]);
+                                document.getElementById("queryResult").appendChild(row);
+                            }
+                        } else {
                             let row = document.createElement("div");
-                            row.innerHTML = JSON.stringify(result[i]);
+                            row.innerHTML = JSON.stringify(data.result.sqlMessage);
                             document.getElementById("queryResult").appendChild(row);
                         }
                     } 
