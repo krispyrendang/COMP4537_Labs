@@ -34,6 +34,7 @@
 
             let word = document.getElementById("word").value;
             let definition = document.getElementById("definition").value;
+            let lang = document.getElementById("language").value;
             let params = "?word=" + word + "&definition=" + definition;
             const xhttp = new XMLHttpRequest();
             xhttp.open("POST", endPointRoot, true);
@@ -45,6 +46,7 @@
                     document.getElementById("addResult").innerHTML = this.responseText;
                     document.getElementById("word").value = "";
                     document.getElementById("definition").value = "";
+                    document.getElementById("language").value = "";
                 }
             }
         }
