@@ -38,6 +38,11 @@
                 else if (this.readyState == 4 && this.status == 404) {
                     document.getElementById("statusCode").innerHTML = "Status Code: " + this.status + " Not Found";
                     document.getElementById("searchResult").innerHTML = this.responseText;
+                }                 
+                else if (this.readyState == 4 && this.status == 400) {
+                    document.getElementById("statusCode").innerHTML = "Status Code: " + this.status + " Bad Request";
+                    const response = JSON.parse(this.responseText);
+                    document.getElementById("searchResult").innerHTML = response.message;
                 }
             }
         }
