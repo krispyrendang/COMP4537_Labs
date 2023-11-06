@@ -19,11 +19,12 @@
     <a href="write.html"><button type="button">Store a word</button></a>
 
     <script>
-        const endPointRoot = "https://www.winstonnguyen.ca/COMP4537/labs/4/API/v1/";
+        //const endPointRoot = "https://www.winstonnguyen.ca/COMP4537/labs/6/API/v1/";
+        const endPointRoot = "http://localhost:3000/COMP4537/labs/6/API/v1/definition/";
 
         function searchDefinition() {
             let word = document.getElementById("word").value;
-            let params = "?word=" + word;
+            let params = word;
             let url = endPointRoot + params;
             const xhttp = new XMLHttpRequest();
             xhttp.open("GET", url, true);

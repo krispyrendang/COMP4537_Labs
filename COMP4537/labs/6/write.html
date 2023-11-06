@@ -10,15 +10,22 @@
 
     <div>
         <label>Word &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-        <input type="text" id="word"> <br><br>
+        <input type="text" id="word"> <br>
         <label for="langauge">Select a language:</label>
-        <select name="langauge" id="langauge">
+        <select name="langauge" id="word_language">
             <option value="english">English</option>
             <option value="chinese">Simplified Chinese</option>
             <option value="french">French</option>
             <option value="korean">Korean</option>
         </select> <br><br>
         <label>Definition</label> <br>
+        <label for="langauge">Select a language:</label>
+        <select name="langauge" id="def_language">
+            <option value="english">English</option>
+            <option value="chinese">Simplified Chinese</option>
+            <option value="french">French</option>
+            <option value="korean">Korean</option>
+        </select> <br><br>
         <textarea id="definition" rows="5" cols="40"></textarea> <br><br>
         <button type="submit" onclick="addDefinition()">Add Definition</button>
     </div>
@@ -27,17 +34,18 @@
     <a href="search.html"><button type="button">Search a word</button></a>
 
     <script>
-        const word_endPointRoot = "https://www.winstonnguyen.ca/COMP4537/labs/6/api/v1/definition/"; //   /api/v1/definition/:word
-        const lang_endPointRoot = "https://www.winstonnguyen.ca/COMP4537/labs/6/api/v1/languages"; //     /api/v1/languages
+        const word_endPointRoot = "http://localhost:3000/COMP4537/labs/6/api/v1/definition/"; //   /api/v1/definition/:word
+        const lang_endPointRoot = "https://www.winstonnguyen.ca/COMP4537/labs/6/api/v1/languages/"; //     /api/v1/languages
 
         function addDefinition() {
 
             let word = document.getElementById("word").value;
             let definition = document.getElementById("definition").value;
-            let lang = document.getElementById("language").value;
-            let params = "?word=" + word + "&definition=" + definition;
+            let word_language = document.getElementById("word_language").value;
+            let def_language = document.getElementById("def_language").value;
+            let params = "word=" + word + "&definition=" + definition + "&word_language=" + word_language + "&def_language=" + def_language;
             const xhttp = new XMLHttpRequest();
-            xhttp.open("POST", endPointRoot, true);
+            xhttp.open("POST", word_endPointRoot, true);
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhttp.send(params);
             xhttp.onreadystatechange = function () {
