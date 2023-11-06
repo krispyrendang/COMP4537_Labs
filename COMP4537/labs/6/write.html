@@ -54,6 +54,16 @@
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     console.log(this.responseText);
+
+                    if(this.responseText.error){
+                        document.getElementById("addResult") = "Word already exist! Click on Update Definition if you wish to update entry.";
+                    } else {
+                        document.getElementById("addResult").innerHTML = this.responseText;
+                        document.getElementById("word").value = "";
+                        document.getElementById("definition").value = "";
+                        document.getElementById("language").value = "";
+                    }
+                    
                     document.getElementById("addResult").innerHTML = this.responseText;
                     document.getElementById("word").value = "";
                     document.getElementById("definition").value = "";
