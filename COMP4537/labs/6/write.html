@@ -28,6 +28,9 @@
         </select> <br><br>
         <textarea id="definition" rows="5" cols="40"></textarea> <br><br>
         <button type="submit" onclick="addDefinition()">Add Definition</button>
+        <button type="submit" onclick="updateDefinition()">Update Definition</button>
+        <button type="submit" onclick="deleteWord()">Delete Word</button>
+
     </div>
     <div id="addResult"></div>
     <br><br>
@@ -48,6 +51,46 @@
             xhttp.open("POST", word_endPointRoot, true);
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhttp.send(params);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                    document.getElementById("addResult").innerHTML = this.responseText;
+                    document.getElementById("word").value = "";
+                    document.getElementById("definition").value = "";
+                    document.getElementById("language").value = "";
+                }
+            }
+        }
+
+        function updateDefinition() {
+
+            let word = document.getElementById("word").value;
+            let definition = document.getElementById("definition").value;
+            let word_language = document.getElementById("word_language").value;
+            let def_language = document.getElementById("def_language").value;
+            let params = "word=" + word + "&definition=" + definition + "&word_language=" + word_language + "&def_language=" + def_language;
+            const xhttp = new XMLHttpRequest();
+            xhttp.open("PATCH", word_endPointRoot, true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(params);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                    document.getElementById("addResult").innerHTML = this.responseText;
+                    document.getElementById("word").value = "";
+                    document.getElementById("definition").value = "";
+                    document.getElementById("language").value = "";
+                }
+            }
+        }
+
+        function deleteWord() {
+
+            let word = document.getElementById("word").value;
+            const xhttp = new XMLHttpRequest();
+            xhttp.open("DELETE", word_endPointRoot, true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(word);
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     console.log(this.responseText);
