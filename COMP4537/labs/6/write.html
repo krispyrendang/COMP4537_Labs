@@ -85,12 +85,12 @@
         }
 
         function deleteWord() {
-
             let word = document.getElementById("word").value;
             const xhttp = new XMLHttpRequest();
+            let param = "word=" + word;
             xhttp.open("DELETE", word_endPointRoot, true);
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send(word);
+            xhttp.send(param);
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     console.log(this.responseText);
