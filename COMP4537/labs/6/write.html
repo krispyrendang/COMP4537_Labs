@@ -13,18 +13,11 @@
         <input type="text" id="word"> <br>
         <label for="langauge">Select a language:</label>
         <select name="langauge" id="word_language">
-            <option value="english">English</option>
-            <option value="chinese">Simplified Chinese</option>
-            <option value="french">French</option>
-            <option value="korean">Korean</option>
         </select> <br><br>
         <label>Definition</label> <br>
         <label for="langauge">Select a language:</label>
         <select name="langauge" id="def_language">
-            <option value="english">English</option>
-            <option value="chinese">Simplified Chinese</option>
-            <option value="french">French</option>
-            <option value="korean">Korean</option>
+
         </select> <br><br>
         <textarea id="definition" rows="5" cols="40"></textarea> <br><br>
         <button type="submit" onclick="addDefinition()">Add Definition</button>
@@ -32,16 +25,42 @@
         <button type="submit" onclick="deleteWord()">Delete Word</button>
 
     </div>
+    
+    <div id="statusCode"></div>
     <div id="addResult"></div>
     <br><br>
     <a href="search.html"><button type="button">Search a word</button></a>
 
     <script>
-        const word_endPointRoot = "http://localhost:3000/COMP4537/labs/6/api/v1/definition/"; //   /api/v1/definition/:word
+        const word_endPointRoot = "https://www.winstonnguyen.ca/COMP4537/labs/6/api/v1/definition/"; //   /api/v1/definition/:word
         const lang_endPointRoot = "https://www.winstonnguyen.ca/COMP4537/labs/6/api/v1/languages/"; //     /api/v1/languages
 
-        function addDefinition() {
+        window.onload = function() {
+            const xhttp = new XMLHttpRequest();
+            xhttp.open("GET", lang_endPointRoot, true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    const languages = JSON.parse(this.responseText);
+                    let wordList = document.getElementById("word_language");
+                    let defList = document.getElementById("def_language");
+                    for (let i = 0; i < languages.length; i++) {
+                        let optionOne = document.createElement("option");
+                        optionOne.value = languages[i].name;
+                        optionOne.innerHTML = languages[i].name;
+                        wordList.appendChild(optionOne);
 
+                        let optionTwo = document.createElement("option");
+                        optionTwo.value = languages[i].name;
+                        optionTwo.innerHTML = languages[i].name;
+                        defList.appendChild(optionTwo);
+                    }
+                }
+            }
+        }
+
+        function addDefinition() {
             let word = document.getElementById("word").value;
             let definition = document.getElementById("definition").value;
             let word_language = document.getElementById("word_language").value;
@@ -52,17 +71,24 @@
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhttp.send(params);
             xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    console.log(this.responseText);
+                if (this.readyState == 4 && this.status == 201) {
+                    document.getElementById("statusCode").innerHTML = "Status Code: " + this.status + " Created";
+                    document.getElementById("addResult").innerHTML = this.responseText;
+                    document.getElementById("word").value = "";
+                    document.getElementById("definition").value = "";
+                    document.getElementById("word_language").value = "";
+                    document.getElementById("def_language").value = "";
 
-                    if(this.responseText.error){
-                        document.getElementById("addResult") = "Word already exist! Click on Update Definition if you wish to update entry.";
-                    } else {
-                        document.getElementById("addResult").innerHTML = this.responseText;
-                        document.getElementById("word").value = "";
-                        document.getElementById("definition").value = "";
-                        document.getElementById("language").value = "";
-                    }
+                } 
+                else if (this.readyState == 4 && this.status == 409) {
+                    document.getElementById("statusCode").innerHTML = "Status Code: " + this.status + " Conflict";
+                    const response = JSON.parse(this.responseText);
+                    document.getElementById("addResult").innerHTML = response.message;
+                }
+                else if (this.readyState == 4 && this.status == 400) {
+                    document.getElementById("statusCode").innerHTML = "Status Code: " + this.status + " Bad Request";
+                    const response = JSON.parse(this.responseText);
+                    document.getElementById("addResult").innerHTML = response.message;
                 }
             }
         }
@@ -80,11 +106,20 @@
             xhttp.send(params);
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    console.log(this.responseText);
+                    document.getElementById("statusCode").innerHTML = "Status Code: " + this.status + " OK";
                     document.getElementById("addResult").innerHTML = this.responseText;
                     document.getElementById("word").value = "";
                     document.getElementById("definition").value = "";
                     document.getElementById("language").value = "";
+                } 
+                else if (this.readyState == 4 && this.status == 404) {
+                    document.getElementById("statusCode").innerHTML = "Status Code: " + this.status + " Not Found";
+                    document.getElementById("addResult").innerHTML = this.responseText;
+                }
+                else if (this.readyState == 4 && this.status == 400) {
+                    document.getElementById("statusCode").innerHTML = "Status Code: " + this.status + " Bad Request";
+                    const response = JSON.parse(this.responseText);
+                    document.getElementById("addResult").innerHTML = response.message;
                 }
             }
         }
@@ -98,11 +133,21 @@
             xhttp.send(param);
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("statusCode").innerHTML = "Status Code: " + this.status + " OK";
                     console.log(this.responseText);
                     document.getElementById("addResult").innerHTML = this.responseText;
                     document.getElementById("word").value = "";
                     document.getElementById("definition").value = "";
                     document.getElementById("language").value = "";
+                }
+                else if (this.readyState == 4 && this.status == 404) {
+                    document.getElementById("statusCode").innerHTML = "Status Code: " + this.status + " Not Found";
+                    document.getElementById("addResult").innerHTML = this.responseText;
+                }
+                else if (this.readyState == 4 && this.status == 400) {
+                    document.getElementById("statusCode").innerHTML = "Status Code: " + this.status + " Bad Request";
+                    const response = JSON.parse(this.responseText);
+                    document.getElementById("addResult").innerHTML = response.message;
                 }
             }
         }

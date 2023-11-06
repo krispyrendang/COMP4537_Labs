@@ -13,6 +13,7 @@
         <input type="text" id="word"> <br><br>
         <button type="submit" onclick="searchDefinition()">Search</button><br><br>
         <label><h3>Definition</h3></label>
+        <div id="statusCode"></div>
         <div id="searchResult"">Please search to find a definition!</div>
     </div>
     <br><br>
@@ -31,6 +32,11 @@
             xhttp.send();
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("statusCode").innerHTML = "Status Code: " + this.status + " OK";
+                    document.getElementById("searchResult").innerHTML = this.responseText;
+                }
+                else if (this.readyState == 4 && this.status == 404) {
+                    document.getElementById("statusCode").innerHTML = "Status Code: " + this.status + " Not Found";
                     document.getElementById("searchResult").innerHTML = this.responseText;
                 }
             }
